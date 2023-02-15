@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.7.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="终于来到大名鼎鼎的bert了  总结 随机mask掉sentence中的token，用多层、双向transformer进行pre-train，然后特定任务上再fine-tune 创新点  随机mask掉sentence中的token，以便使用双向transformer token representation &#x3D; token embedding + segment embedding + posi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding">
+<meta property="og:url" content="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/index.html">
+<meta property="og:site_name" content="Jiale&#39;s Blog">
+<meta property="og:description" content="终于来到大名鼎鼎的bert了  总结 随机mask掉sentence中的token，用多层、双向transformer进行pre-train，然后特定任务上再fine-tune 创新点  随机mask掉sentence中的token，以便使用双向transformer token representation &#x3D; token embedding + segment embedding + posi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/pre-train_stage.png">
+<meta property="og:image" content="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/token_representation.png">
+<meta property="article:published_time" content="2021-08-25T15:18:23.000Z">
+<meta property="article:modified_time" content="2021-08-26T15:11:45.314Z">
+<meta property="article:author" content="Jiale He">
+<meta property="article:tag" content="技术">
+<meta property="article:tag" content="论文笔记">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/pre-train_stage.png">
+
+
+<link rel="canonical" href="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/","path":"2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/","title":"BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding | Jiale's Blog</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Jiale's Blog</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">洗剑池</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">4</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text"> 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%86%E8%8A%82"><span class="nav-number">2.</span> <span class="nav-text"> 细节</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Jiale He</p>
+  <div class="site-description" itemprop="description">算法工程师的各式零散随笔</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jiale He">
+      <meta itemprop="description" content="算法工程师的各式零散随笔">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jiale's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-08-25 23:18:23" itemprop="dateCreated datePublished" datetime="2021-08-25T23:18:23+08:00">2021-08-25</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-08-26 23:11:45" itemprop="dateModified" datetime="2021-08-26T23:11:45+08:00">2021-08-26</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/ml-dl/" itemprop="url" rel="index"><span itemprop="name">ml/dl</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/ml-dl/%E8%AE%BA%E6%96%87/" itemprop="url" rel="index"><span itemprop="name">论文</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>终于来到大名鼎鼎的bert了</p>
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h1>
+<p>随机mask掉sentence中的token，用多层、双向transformer进行pre-train，然后特定任务上再fine-tune</p>
+<p><strong>创新点</strong></p>
+<ol>
+<li>随机mask掉sentence中的token，以便使用双向transformer</li>
+<li>token representation = token embedding + segment embedding + position embedding</li>
+</ol>
+<h1 id="细节"><a class="markdownIt-Anchor" href="#细节"></a> 细节</h1>
+<p>分成2个阶段，pre-training和fine-tuning。在pre-training阶段，使用无标签的大量数据，在fine-tuning阶段，使用有标签的小量数据</p>
+<p>bert的架构：multi-layer bidirectional Transformer encoder</p>
+<p>使用了WordPiece作为embedding</p>
+<p>pre-train阶段，使用无标签的数据：<br />
+<img src="/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/pre-train_stage.png" alt="图1 bert pre-train阶段" /></p>
+<p>对每个sentence pair，用SEP分开两个句子，然后对每个token增加一个embedding表示属于sentence A还是sentence B。<br />
+每个token的representation来自3个部分：token embedding, segment embedding, position embedding，即：<br />
+<img src="/2021/08/25/BERT-Pre-training-of-Deep-Bidirectional-Transformers-forLanguage-Understanding/token_representation.png" alt="" /></p>
+<p>之前的LM都是单向的：要么从左向右，要么从右向左，理论上双向的模型应该比单向的模型效果好，但是双向的模型会直接“看到”要预测的目标。bert提出<mark>随机</mark>选择一部分token mask掉，然后预测这些mask掉的token</p>
+<blockquote>
+<p>上面高亮的部分，正是ernie改进的点:ernie的mask不再是随机mask，而是选择句子中的entity进行mask</p>
+</blockquote>
+<p>由于在fine-tune过程中，并没有MASK这个符号，所以在pre-train阶段，并不是将所有masked token都替换为MASK，而是：</p>
+<ol>
+<li>80%替换为MASK</li>
+<li>10%替换为随机token</li>
+<li>10%保持不变</li>
+</ol>
+<p>上面训LM的部分已经可以了，但是LM对句子之间的关系学习不好，因此还有专门对句子之间关系的模型。同样的训练数据，将sentence B改为：</p>
+<ol>
+<li>50%情况下是sentence A的下一句，label = IsNext</li>
+<li>50%情况下是语料库中的随机一句，label = NotNext</li>
+</ol>
+<p>用上面图1的C作为判断next sentence的embedding</p>
+<p>在多项任务上，输入可以是：</p>
+<ol>
+<li>sentence pairs</li>
+<li>hypothesis-premise pairs</li>
+<li>question-passage pairs</li>
+<li>text-<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">∅</mi></mrow><annotation encoding="application/x-tex">\varnothing</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66334em;vertical-align:-0.08167em;"></span><span class="mord amsrm">∅</span></span></span></span> pairs(for classification)</li>
+</ol>
+<p>输出可以是：</p>
+<ol>
+<li>token级别的任务上(sentence tagging, question answering)，直接使用token representation</li>
+<li>分类任务上，使用CLS representation</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%8A%80%E6%9C%AF/" rel="tag"># 技术</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/" rel="tag"># 论文笔记</a>
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/08/09/ERNIE-Enhanced-Representation-through-Knowledge-Integration/" rel="prev" title="ERNIE: Enhanced Representation through Knowledge Integration">
+                  <i class="fa fa-chevron-left"></i> ERNIE: Enhanced Representation through Knowledge Integration
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/08/26/Attention-is-all-you-need/" rel="next" title="Attention is all you need">
+                  Attention is all you need <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jiale He</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css" integrity="sha256-55Ddc47WvWTK5vYVejnAuSK7USJaL7FQXrzQ4HiQ1WY=" crossorigin="anonymous">
+
+
+
+</body>
+</html>

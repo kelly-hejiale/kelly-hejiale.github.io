@@ -31,7 +31,7 @@
 <meta property="og:image" content="http://example.com/2023/08/21/ml-other-2/hnsw1.jpg">
 <meta property="og:image" content="http://example.com/2023/08/21/ml-other-2/hnsw2.png">
 <meta property="article:published_time" content="2023-08-21T20:35:21.000Z">
-<meta property="article:modified_time" content="2024-01-23T00:05:09.283Z">
+<meta property="article:modified_time" content="2024-01-31T00:24:39.320Z">
 <meta property="article:author" content="KellyH">
 <meta property="article:tag" content="machine learning">
 <meta name="twitter:card" content="summary">
@@ -123,7 +123,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sampling"><span class="nav-number">1.</span> <span class="nav-text"> Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#common-down-sampling-methods"><span class="nav-number">1.1.</span> <span class="nav-text"> Common Down-sampling Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#upsamplingoversampling"><span class="nav-number">1.2.</span> <span class="nav-text"> Upsampling&#x2F;Oversampling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#smote-synthetic-minority-oversampling-technique"><span class="nav-number">1.2.1.</span> <span class="nav-text"> SMOTE (Synthetic Minority Oversampling Technique)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ann-approximate-nearest-neighbor"><span class="nav-number">2.</span> <span class="nav-text"> ANN (approximate nearest neighbor)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tree-based-kd-tree"><span class="nav-number">2.1.</span> <span class="nav-text"> Tree-based: Kd-tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash-based-lsh"><span class="nav-number">2.2.</span> <span class="nav-text"> Hash-based: LSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-based-hnsw"><span class="nav-number">2.3.</span> <span class="nav-text"> Graph-based: HNSW</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nsw"><span class="nav-number">2.3.1.</span> <span class="nav-text"> NSW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hnsw"><span class="nav-number">2.3.2.</span> <span class="nav-text"> HNSW</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k-fold-cross-validation"><span class="nav-number">3.</span> <span class="nav-text"> K-Fold Cross Validation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#normalization"><span class="nav-number">4.</span> <span class="nav-text"> Normalization</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#samplinga-name-samplinga"><span class="nav-number">1.</span> <span class="nav-text"> Sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#common-down-sampling-methods"><span class="nav-number">1.1.</span> <span class="nav-text"> Common Down-sampling Methods</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#upsamplingoversampling"><span class="nav-number">1.2.</span> <span class="nav-text"> Upsampling&#x2F;Oversampling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#smote-synthetic-minority-oversampling-technique"><span class="nav-number">1.2.1.</span> <span class="nav-text"> SMOTE (Synthetic Minority Oversampling Technique)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ann-approximate-nearest-neighbor"><span class="nav-number">2.</span> <span class="nav-text"> ANN (approximate nearest neighbor)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#tree-based-kd-tree"><span class="nav-number">2.1.</span> <span class="nav-text"> Tree-based: Kd-tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hash-based-lsh"><span class="nav-number">2.2.</span> <span class="nav-text"> Hash-based: LSH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-based-hnsw"><span class="nav-number">2.3.</span> <span class="nav-text"> Graph-based: HNSW</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nsw"><span class="nav-number">2.3.1.</span> <span class="nav-text"> NSW</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hnsw"><span class="nav-number">2.3.2.</span> <span class="nav-text"> HNSW</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#k-fold-cross-validation"><span class="nav-number">3.</span> <span class="nav-text"> K-Fold Cross Validation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#normalization"><span class="nav-number">4.</span> <span class="nav-text"> Normalization</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -219,7 +219,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2024-01-22 16:05:09" itemprop="dateModified" datetime="2024-01-22T16:05:09-08:00">2024-01-22</time>
+        <time title="Modified: 2024-01-30 16:24:39" itemprop="dateModified" datetime="2024-01-30T16:24:39-08:00">2024-01-30</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -252,7 +252,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="sampling"><a class="markdownIt-Anchor" href="#sampling"></a> Sampling</h1>
+        <h1 id="samplinga-name-samplinga"><a class="markdownIt-Anchor" href="#samplinga-name-samplinga"></a> Sampling<a name = "sampling"></a></h1>
 <h2 id="common-down-sampling-methods"><a class="markdownIt-Anchor" href="#common-down-sampling-methods"></a> Common Down-sampling Methods</h2>
 <p><strong>Sampling without replacement</strong><a name = "sample_wo_replacement"></a>, in which a subset of the observations are selected randomly, and once an observation is selected it cannot be selected again.<br />
 <strong>Sampling with replacement</strong>, in which a subset of observations are selected randomly, and an observation may be selected more than once.</p>

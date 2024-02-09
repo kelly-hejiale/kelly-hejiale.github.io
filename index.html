@@ -130,7 +130,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -179,6 +179,127 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/09/ml-unsupervised-models/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="KellyH">
+      <meta itemprop="description" content="Machine Learning Engineer <br> Share & Learn">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kelly H">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/02/09/ml-unsupervised-models/" class="post-title-link" itemprop="url">ml_unsupervised_models</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2024-02-09 09:56:43" itemprop="dateModified" datetime="2024-02-09T09:56:43-08:00">2024-02-09</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technical/" itemprop="url" rel="index"><span itemprop="name">technical</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/technical/machine-learning-notes/" itemprop="url" rel="index"><span itemprop="name">machine learning notes</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="hierarchical-clustering"><a class="markdownIt-Anchor" href="#hierarchical-clustering"></a> Hierarchical Clustering</h1>
+<h2 id="split"><a class="markdownIt-Anchor" href="#split"></a> Split</h2>
+<p>Consider all the samples as one cluster, then split into sub-clusters depending on distances.</p>
+<h2 id="combine"><a class="markdownIt-Anchor" href="#combine"></a> Combine</h2>
+<p>Consider each sample as one cluster, then combine the nearest into one cluster.</p>
+<h2 id="k-means"><a class="markdownIt-Anchor" href="#k-means"></a> K-means</h2>
+<p>NP-hard problem</p>
+<p>Steps:</p>
+<ol>
+<li>Select <code>k</code> random nodes as the center of clusters</li>
+<li>For the rest of <code>n-k</code> samples, calculate the distance between the sample with the centers</li>
+<li>Classify the sample to the nearest cluster</li>
+<li>Re-calculate the center of the clusters</li>
+<li>Repeat 3-4 until the centers don’t change anymore</li>
+</ol>
+<p><strong>How to decide the first centers</strong><br />
+The randomly selected nodes as first centers would influence the results of the clusters.</p>
+<p>Solutions:</p>
+<ol>
+<li>Select the initial centers for multiple times</li>
+<li>Use hierarchical clustering to find <code>k</code> clusters, and then use them as the initial centers.</li>
+</ol>
+<p><strong>How to choose <code>k</code></strong><br />
+If not decided by business rules, then use elbow rule.<br />
+Draw a linear picture between values of <code>k</code> and diameter of clusters:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/2024/02/09/ml-unsupervised-models/kmeans_elbow_rule.png" alt="" /></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Elbow Rule</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>x</code> is the values of <code>k</code>, and the <code>y</code> is the  diameter of the clusters, eg, the sum of the square distance between points in a cluster and the cluster centroid.</p>
+<p>From the picture above, the best value of <code>k</code> is 3.</p>
+<h3 id="other-improments-for-k-means"><a class="markdownIt-Anchor" href="#other-improments-for-k-means"></a> Other Improments for K-Means</h3>
+<p><strong>Sensitive to Initial Values</strong><br />
+k-means++:</p>
+<p><strong>Sensitive to Noise and Outliners</strong></p>
+<h1 id="distance"><a class="markdownIt-Anchor" href="#distance"></a> Distance</h1>
+<h2 id="jaccard-distance"><a class="markdownIt-Anchor" href="#jaccard-distance"></a> Jaccard Distance</h2>
+<h2 id="cosine-distance"><a class="markdownIt-Anchor" href="#cosine-distance"></a> Cosine Distance</h2>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -2190,89 +2311,6 @@ s.t. \; &amp; \; y_i(wx_i + b) \geq 1 - \zeta_i
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2023/02/18/cs285-lec8-DRL-with-Q-Functions/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/17/cs285-lec7-value-function/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="KellyH">
-      <meta itemprop="description" content="Machine Learning Engineer <br> Share & Learn">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Kelly H">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/02/17/cs285-lec7-value-function/" class="post-title-link" itemprop="url">cs285-lec7-value function</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2023-09-30 17:29:51" itemprop="dateModified" datetime="2023-09-30T17:29:51-07:00">2023-09-30</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/technical/" itemprop="url" rel="index"><span itemprop="name">technical</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/technical/course-notes/" itemprop="url" rel="index"><span itemprop="name">course notes</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>If we don't want to learn a policy, we could learn value funtions.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/02/17/cs285-lec7-value-function/">
                 Read more &raquo;
               </a>
             </div>

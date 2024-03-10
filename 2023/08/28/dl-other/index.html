@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://example.com/2023/08/28/dl-other/tanh_derivative.png">
 <meta property="og:image" content="http://example.com/2023/08/28/dl-other/Attention-qkv.png">
 <meta property="article:published_time" content="2023-08-28T18:43:52.000Z">
-<meta property="article:modified_time" content="2024-02-13T03:26:30.930Z">
+<meta property="article:modified_time" content="2024-03-10T07:10:32.687Z">
 <meta property="article:author" content="KellyH">
 <meta property="article:tag" content="deep learning">
 <meta property="article:tag" content="machine learning">
@@ -221,7 +221,7 @@
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2024-02-12 19:26:30" itemprop="dateModified" datetime="2024-02-12T19:26:30-08:00">2024-02-12</time>
+        <time title="Modified: 2024-03-09 23:10:32" itemprop="dateModified" datetime="2024-03-09T23:10:32-08:00">2024-03-09</time>
       </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -479,6 +479,7 @@ s-65,47,-65,47z M834 80H400000v40H845z'/></svg></span></span></span><span class=
 <li>When model is sensitive to distance. If no scaling, then the model will be heavily impacted by the outliners. Or the model will be impacted by features with large ranges.</li>
 <li>If dataset contains features that have different ranges, units of measurement, or orders of magnitude.</li>
 </ol>
+<p>Do the normalization on training set, and use the statistics from training set to test set</p>
 <h2 id="max-min-scalingunity-based-normalization"><a class="markdownIt-Anchor" href="#max-min-scalingunity-based-normalization"></a> Max-Min Scaling/unity-based normalization</h2>
 <p>Scaled features to range from <code>[0, 1]</code>.</p>
 <p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mi>X</mi><mo mathvariant="normal">′</mo></msup><mo>=</mo><mfrac><mrow><mi>X</mi><mo>−</mo><msub><mi>X</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><mrow><msub><mi>X</mi><mrow><mi>m</mi><mi>a</mi><mi>x</mi></mrow></msub><mo>−</mo><msub><mi>X</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">X&#x27; = \frac{X - X_{min}}{X_{max} - X_{min}}
